@@ -1,0 +1,12 @@
+
+.nodeText {
+            cursor: pointer;
+}
+
+.node { 
+        list-style-type: disc;
+ }
+
+.leaf { 
+        list-style-type: circle;
+ }
