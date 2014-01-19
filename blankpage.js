@@ -7,27 +7,25 @@ var nodeTextClassName = "nodeText";
 
 chrome.runtime.onMessage.addListener(populatePage);
 
-window.onload = activateButtons;
-
-
-function activateButtons() {
-  document.getElementById("expandTree").addEventListener(
-    'click', toggleWholeTree(defaultDisplayValue));
-  document.getElementById("collapseTree").addEventListener(
-    'click', toggleWholeTree("none"));
-}
+// Attach behaviours to the buttons
+document.getElementById("expandTree").addEventListener(
+  'click', toggleWholeTree(defaultDisplayValue));
+document.getElementById("collapseTree").addEventListener(
+  'click', toggleWholeTree("none"));
 
 
 function populatePage(pageInfo, sender, sendResponse)
 { 
   // Print depth of tree and URL of page it was harvested from
-  document.getElementById('treeDepth').innerHTML = 
+  document.getElementById('treeDepth').textContent = 
     "DOM tree of '" + pageInfo.pageURL + "' has depth " +
     String(findDepth(pageInfo.pageSkeleton));
 
   // Print the DOM skeleton tree which is passed in by the event page.
+  var rootItem = document.createElement('LI');
   displayTreeSkeleton(pageInfo.pageSkeleton,
-		      document.getElementById('startHere'));
+		      rootItem);
+  document.getElementById('rootList').appendChild(rootItem);
 }
 
 
@@ -78,7 +76,7 @@ function toggleSubTree(event)
   {
     console.log("Error in toggleSubTree(), assumption about tree structure is incorrect");
   }
-  else if (event.eventPhase == Event.AT_TARGET
+  else if (event.eventPhase == Event.AT_TARGET // Defensive
 	   && this.parentNode.childNodes[1].style)
   {
     if (this.parentNode.childNodes[1].style.display == defaultDisplayValue)
